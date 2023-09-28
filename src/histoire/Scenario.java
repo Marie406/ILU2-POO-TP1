@@ -11,6 +11,10 @@ public class Scenario {
 	public static void main(String[] args) {
 		Village village = new Village("le village des irr�ductibles", 10, 5);
 		Chef abraracourcix = new Chef("Abraracourcix", 10, village);
+		
+		//pour derniere question
+		village.afficheVillageoisApp();
+		
 		village.setChef(abraracourcix);
 		Druide druide = new Druide("Panoramix", 2, 5, 10);
 		Gaulois obelix = new Gaulois("Ob�lix", 25);
@@ -34,11 +38,20 @@ public class Scenario {
 
 		System.out.println(village.rechercherVendeursProduit("fleurs"));
 		Etal etalFleur = village.rechercherEtal(bonemine);
-		System.out.println(etalFleur.acheterProduit(10, abraracourcix));
-		System.out.println(etalFleur.acheterProduit(15, obelix));
-		System.out.println(etalFleur.acheterProduit(15, assurancetourix));
+		
+		
+		//pour avant derniere partie
+		etalFleur.acheterProduitApp(10, abraracourcix);
+		etalFleur.acheterProduitApp(15, obelix);
+		etalFleur.acheterProduitApp(-3, assurancetourix);
+		etalFleur.acheterProduitApp(12, null);
+
 		System.out.println(village.partirVendeur(abraracourcix));
 		System.out.println(village.afficherMarche());
+		
+		village.afficheVillageoisApp();
+		
+		
 	}
 
 }

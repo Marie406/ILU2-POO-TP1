@@ -2,6 +2,7 @@ package villagegaulois;
 
 import personnages.Chef;
 import personnages.Gaulois;
+import histoire.VillageSansChefException;
 
 public class Village {
 	private String nom;
@@ -22,7 +23,6 @@ public class Village {
 		
 		private Marche(int nbEtalMarche) {
 			etals = new Etal[nbEtalMarche];
-			//System.out.println("mon marche possede " + Integer.toString(etals.length));
 		}
 		
 		private void utiliserEtal(int indiceEtal, Gaulois vendeur, 
@@ -43,14 +43,12 @@ public class Village {
 		}
 		
 		private Etal trouverVendeur(Gaulois gaulois) {
-			int i = 0;
-			while(i<etals.length && etals[i].getVendeur()!=gaulois) {
-				i++;
+			for(int i = 0; i<etals.length; i++) {
+				if(etals[i]!=null && etals[i].isEtalOccupe() && etals[i].getVendeur().getNom().equals(gaulois.getNom())) {
+					return etals[i];
+				}
 			}
-			if(i!=etals.length)
-				return etals[i];
-			else 
-				return null;
+			return null; 
 		}
 		
 		private String afficherMarche() {
@@ -79,7 +77,6 @@ public class Village {
 		chaine.append(vendeur.getNom() + " cherche un endroit pour vendre " + Integer.toString(nbProduit) + " " + produit + ".\n");
 		indEtal = marche.trouverEtalLibre();
 		if(indEtal!=-1) {
-			//System.out.println("L'étal libre est à l'indice " + Integer.toString(indEtal));
 			marche.utiliserEtal(indEtal, vendeur, produit, nbProduit);
 			chaine.append("Le vendeur " + vendeur.getNom() + " vend des fleurs � l'�tal n�" + Integer.toString(indEtal+1) + ".\n");
 		}
@@ -107,12 +104,7 @@ public class Village {
 	}
 	
 	public Etal rechercherEtal(Gaulois vendeur) {
-		for(int i = 0; i<marche.etals.length; i++) {
-			if(marche.etals[i]!=null && marche.etals[i].isEtalOccupe() && marche.etals[i].getVendeur().getNom().equals(vendeur.getNom())) {
-				return marche.etals[i];
-			}
-		}
-		return null; 
+		return marche.trouverVendeur(vendeur);
 	}
 	
 	public String partirVendeur(Gaulois vendeur) {
@@ -156,7 +148,10 @@ public class Village {
 		return null;
 	}
 
-	public String afficherVillageois() {
+	public String afficherVillageois() throws VillageSansChefException {
+		if(chef==null) {
+			throw new VillageSansChefException("Pas de chef dans le village.\n");
+		}
 		StringBuilder chaine = new StringBuilder();
 		if (nbVillageois < 1) {
 			chaine.append("Il n'y a encore aucun habitant au village du chef "
@@ -171,5 +166,12 @@ public class Village {
 		return chaine.toString();
 	}
 	
+	public void afficheVillageoisApp() {
+		try {
+			System.out.println(afficherVillageois());
+		} catch (VillageSansChefException e) {
+			System.out.println("Le village ne possède pas encore de chef.\n");
+		}
+	}
 	
 }
